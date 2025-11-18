@@ -1,3 +1,28 @@
+; ==============================================================================
+; NOME DO PROJETO: Calculadora Didática em Assembly
+; ARQUIVO: calculadora.asm
+;
+; AUTOR: Pablo José Pellegrino Cintra - Turma A
+; DISCIPLINA: Infra de Hardware (AOC)
+; PROFESSOR(A): Fernando Ferreira de Cavalho
+;
+; DESCRIÇÃO:
+; O programa implementa uma calculadora didática com menu interativo para:
+; 1. Conversão de Bases (10 -> 2, 8, 16, BCD) com visualização dos restos.
+; 2. Complemento a 2 (16 bits) com visualização da inversão e soma.
+; 3. Análise de Ponto Flutuante (IEEE 754) extraindo sinal, expoente e mantissa.
+;
+; ==============================================================================
+; HISTÓRICO DE REVISÕES E ATUALIZAÇÕES
+; ==============================================================================
+; DATA       | HORA   | AUTOR      | DESCRIÇÃO DA MUDANÇA
+; -----------|--------|------------|--------------------------------------------
+; 11/11/2025 | 15:00  | PABLO | Criação da estrutura inicial (Main/Menu).
+; 11/11/2025 | 15:15  | PABLO | Implementação da Parte 1 (Bases).
+; 15/11/2025 | 23:30  | PABLO | Implementação da Parte 2 (Comp. a 2).
+; 18/11/2025 | 20:00  | PABLO | Implementação da Parte 3 (Float/Double).
+; ==============================================================================
+
 section .data
     msg_menu        db 10, "=== CALCULADORA DIDATICA ASSEMBLY ===", 10
                     db "1. Conversao de Bases (10 -> 2, 8, 16, BCD)", 10
