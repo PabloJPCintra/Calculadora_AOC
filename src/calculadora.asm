@@ -314,3 +314,142 @@ p2_do:
     pop rbx
     pop rbp
     ret
+
+    func_float:
+    push rbp
+    mov rbp, rsp
+
+    mov rdi, p3_msg_in
+    xor rax, rax
+    call printf
+    mov rdi, p3_fmt_dbl
+    lea rsi, [real_val]
+    xor rax, rax
+    call scanf
+
+    mov rdi, p3_tit_flt
+    xor rax, rax
+    call printf
+
+    movsd xmm0, [real_val]
+    cvtsd2ss xmm0, xmm0
+    movd eax, xmm0
+
+    mov ebx, eax
+    shr ebx, 31
+    mov rdi, p3_msg_sgn
+    mov rsi, rbx
+    cmp rbx, 1
+    je p3_fneg
+    lea rdx, [p3_pos]
+    jmp p3_fprt
+p3_fneg:
+    lea rdx, [p3_neg]
+p3_fprt:
+    xor rax, rax
+    call printf
+
+    ; Expoente
+    mov ebx, eax
+    shr ebx, 23
+    and ebx, 0xFF
+    push rbx
+    mov rdi, p3_msg_exp
+    mov rsi, rbx
+    pop rbx
+    sub ebx, 127
+    mov rdx, rbx
+    xor rax, rax
+    call printf
+
+    ; Mantissa
+    mov rdi, p3_msg_man
+    xor rax, rax
+    call printf
+    mov ebx, eax
+    and ebx, 0x7FFFFF
+    mov rcx, 23
+    call sub_bits_val
+    mov rdi, msg_nl
+    xor rax, rax
+    call printf
+
+    mov rdi, p3_tit_dbl
+    xor rax, rax
+    call printf
+    mov rdx, [real_val]
+
+    mov rbx, rdx
+    shr rbx, 52
+    and rbx, 0x7FF
+    push rbx
+    mov rdi, p3_msg_exp
+    mov rsi, rbx
+    pop rbx
+    sub rbx, 1023
+    mov rdx, rbx
+    xor rax, rax
+    call printf
+
+    mov rdi, p3_msg_man
+    xor rax, rax
+    call printf
+    mov rbx, rdx
+    mov rax, 0xFFFFFFFFFFFFF
+    and rbx, rax
+    mov rcx, 52
+    call sub_bits_val64
+    mov rdi, msg_nl
+    xor rax, rax
+    call printf
+
+    pop rbp
+    ret
+
+sub_bits_val:
+    mov r8, rcx
+p3_loop:
+    mov rax, rbx
+    mov rcx, r8
+    dec rcx
+    bt rax, rcx
+    jc p3_bone
+    mov rsi, 0
+    jmp p3_bdo
+p3_bone:
+    mov rsi, 1
+p3_bdo:
+    push rbx
+    push r8
+    mov rdi, fmt_int
+    xor rax, rax
+    call printf
+    pop r8
+    pop rbx
+    dec r8
+    jnz p3_loop
+    ret
+
+sub_bits_val64:
+    mov r8, rcx 
+p3_l64:
+    mov rax, rbx
+    mov rcx, r8
+    dec rcx
+    bt rax, rcx
+    jc p3_o64
+    mov rsi, 0
+    jmp p3_d64
+p3_o64:
+    mov rsi, 1
+p3_d64:
+    push rbx
+    push r8
+    mov rdi, fmt_int
+    xor rax, rax
+    call printf
+    pop r8
+    pop rbx
+    dec r8
+    jnz p3_l64
+    ret
