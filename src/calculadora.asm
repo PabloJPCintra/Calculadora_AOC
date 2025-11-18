@@ -223,3 +223,94 @@ p1_bprt:
     dec rcx
     jnz p1_bcd_prt
     ret
+
+    func_comp2:
+    push rbp
+    mov rbp, rsp
+
+    mov rdi, p2_msg_in
+    xor rax, rax
+    call printf
+    mov rdi, fmt_int
+    lea rsi, [int_val]
+    xor rax, rax
+    call scanf
+
+    mov ax, [int_val]
+    test ax, ax
+    js p2_negativo
+
+    mov rdi, p2_msg_pos
+    xor rax, rax
+    call printf
+    mov ax, [int_val]
+    call sub_print_16
+    jmp p2_fim
+
+p2_negativo:
+    mov rdi, p2_msg_neg1
+    xor rax, rax
+    call printf
+
+    mov rdi, p2_msg_neg2
+    xor rax, rax
+    call printf
+    mov ax, [int_val]
+    neg ax
+    call sub_print_16
+    mov rdi, msg_nl
+    xor rax, rax
+    call printf
+
+    mov rdi, p2_msg_neg3
+    xor rax, rax
+    call printf
+    mov ax, [int_val]
+    neg ax
+    not ax
+    call sub_print_16
+    mov rdi, msg_nl
+    xor rax, rax
+    call printf
+
+    mov rdi, p2_msg_neg4
+    xor rax, rax
+    call printf
+    mov ax, [int_val]
+    call sub_print_16
+
+p2_fim:
+    mov rdi, msg_nl
+    xor rax, rax
+    call printf
+    pop rbp
+    ret
+
+sub_print_16:
+    push rbp
+    mov rbp, rsp
+    push rbx
+    mov bx, ax
+    mov rcx, 16
+p2_loop:
+    mov ax, bx
+    dec rcx
+    bt ax, cx
+    jc p2_one
+    mov rsi, 0
+    jmp p2_do
+p2_one:
+    mov rsi, 1
+p2_do:
+    push rcx
+    push rbx
+    mov rdi, p2_fmt_bit
+    xor rax, rax
+    call printf
+    pop rbx
+    pop rcx
+    inc rcx
+    loop p2_loop
+    pop rbx
+    pop rbp
+    ret
